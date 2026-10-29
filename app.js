@@ -2,10 +2,11 @@
   const TOTAL_QUESTIONS = 25;
   const POINTS_PER_CORRECT = 4; // 25問 × 4点 = 100点満点
   // sw.js / version.json / sw-register.js の LOCAL_VERSION と揃える
-  const APP_VERSION = "1.0.6";
+  const APP_VERSION = "1.0.7";
   const STORAGE_KEY = "rikkuku-scores";
   const AUTO_ENTER_KEY = "rikkuku-auto-enter";
   const HISTORY_WEEKS = 4;
+  const TIME_LIMIT_SEC = 10; // 1問あたりの制限時間（秒）
   const WEEKDAY_LABELS = ["日", "月", "火", "水", "木", "金", "土"];
 
   const screens = {
@@ -35,6 +36,9 @@
     combo: document.getElementById("combo"),
     appVersion: document.getElementById("app-version"),
     autoEnter: document.getElementById("auto-enter"),
+    timer: document.getElementById("timer"),
+    timerNum: document.getElementById("timer-num"),
+    timerBar: document.getElementById("timer-bar"),
   };
 
   if (els.appVersion) {
@@ -74,6 +78,37 @@
   let index = 0;
   let correct = 0;
   let locking = false;
+  let timerId = null;
+  let deadline = 0;
+
+  function stopTimer() {
+    if (timerId !== null) {
+      window.clearInterval(timerId);
+      timerId = null;
+    }
+  }
+
+  function renderTimer(remainingMs) {
+    const ms = Math.max(0, remainingMs);
+    const sec = Math.ceil(ms / 1000);
+    els.timerNum.textContent = String(sec);
+    els.timerBar.style.width = `${(ms / (TIME_LIMIT_SEC * 1000)) * 100}%`;
+    els.timer.classList.toggle("is-hurry", sec <= 3);
+  }
+
+  function startTimer() {
+    stopTimer();
+    deadline = Date.now() + TIME_LIMIT_SEC * 1000;
+    renderTimer(TIME_LIMIT_SEC * 1000);
+    timerId = window.setInterval(() => {
+      const remaining = deadline - Date.now();
+      renderTimer(remaining);
+      if (remaining <= 0) {
+        stopTimer();
+        timeUp();
+      }
+    }, 100);
+  }
 
   function pad2(n) {
     return String(n).padStart(2, "0");
@@ -317,12 +352,14 @@
     clearFeedback();
     locking = false;
     updateProgress();
+    startTimer();
     requestAnimationFrame(() => {
       els.input.focus({ preventScroll: true });
     });
   }
 
   function finish() {
+    stopTimer();
     const score = correct * POINTS_PER_CORRECT;
     const stamp = stampForScore(score);
 
@@ -487,6 +524,7 @@
     }
 
     locking = true;
+    stopTimer();
     const value = Number(raw);
     const q = queue[index];
     const ok = value === q.answer;
@@ -502,6 +540,16 @@
     }
 
     flashFeedback(false, `ざんねん…\n${q.a}×${q.b}=${q.answer}`);
+    window.setTimeout(advanceAfterAnswer, 2000);
+  }
+
+  function timeUp() {
+    if (locking || !queue[index]) return;
+    locking = true;
+    const q = queue[index];
+    els.progressBar.style.width = `${((index + 1) / TOTAL_QUESTIONS) * 100}%`;
+    // 時間切れは不正解と同じ扱い：正しい答えを見せて次へ
+    flashFeedback(false, `じかんぎれ…\n${q.a}×${q.b}=${q.answer}`);
     window.setTimeout(advanceAfterAnswer, 2000);
   }
 
@@ -526,6 +574,7 @@
   });
 
   function goHome() {
+    stopTimer();
     clearFeedback();
     queue = [];
     index = 0;
