@@ -1,7 +1,7 @@
 (() => {
   if (!("serviceWorker" in navigator)) return;
 
-  const LOCAL_VERSION = "1.0.7";
+  const LOCAL_VERSION = "1.0.8";
   let refreshing = false;
   let hadController = Boolean(navigator.serviceWorker.controller);
 

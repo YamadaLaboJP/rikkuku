@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="りっくく" />
-    <meta name="rikkuku-version" content="1.0.7" />
+    <meta name="rikkuku-version" content="1.0.8" />
     <title>りっくく — 九九特訓</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="icon" href="icons/icon-192.png" type="image/png" />
@@ -22,11 +22,11 @@
       href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Yusei+Magic&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=1.0.7" />
+    <link rel="stylesheet" href="styles.css?v=1.0.8" />
     <script>
       // 古いSWキャッシュに閉じ込められた端末向け：公開版と食い違えば強制更新
       (function () {
-        var LOCAL = "1.0.7";
+        var LOCAL = "1.0.8";
         fetch("./version.json?_=" + Date.now(), { cache: "no-store" })
           .then(function (res) {
             return res.ok ? res.json() : null;
@@ -105,9 +105,6 @@
         <div class="quiz-body">
           <div id="timer" class="timer" aria-label="のこりじかん">
             <span id="timer-num" class="timer-num">10</span><span class="timer-unit">びょう</span>
-            <div class="timer-track" aria-hidden="true">
-              <div id="timer-bar" class="timer-bar"></div>
-            </div>
           </div>
           <p class="question" id="question" aria-live="polite">
             <span id="q-left">1</span><span class="times">×</span><span id="q-right">1</span>
@@ -173,8 +170,8 @@
       </section>
     </main>
 
-    <script src="app.js?v=1.0.7"></script>
-    <script src="sw-register.js?v=1.0.7"></script>
+    <script src="app.js?v=1.0.8"></script>
+    <script src="sw-register.js?v=1.0.8"></script>
   </body>
 </html>
 

@@ -2,7 +2,7 @@
   const TOTAL_QUESTIONS = 25;
   const POINTS_PER_CORRECT = 4; // 25問 × 4点 = 100点満点
   // sw.js / version.json / sw-register.js の LOCAL_VERSION と揃える
-  const APP_VERSION = "1.0.7";
+  const APP_VERSION = "1.0.8";
   const STORAGE_KEY = "rikkuku-scores";
   const AUTO_ENTER_KEY = "rikkuku-auto-enter";
   const HISTORY_WEEKS = 4;
@@ -38,7 +38,6 @@
     autoEnter: document.getElementById("auto-enter"),
     timer: document.getElementById("timer"),
     timerNum: document.getElementById("timer-num"),
-    timerBar: document.getElementById("timer-bar"),
   };
 
   if (els.appVersion) {
@@ -92,7 +91,6 @@
     const ms = Math.max(0, remainingMs);
     const sec = Math.ceil(ms / 1000);
     els.timerNum.textContent = String(sec);
-    els.timerBar.style.width = `${(ms / (TIME_LIMIT_SEC * 1000)) * 100}%`;
     els.timer.classList.toggle("is-hurry", sec <= 3);
   }
 
