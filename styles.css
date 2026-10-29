@@ -370,6 +370,50 @@ body {
   justify-items: stretch;
 }
 
+.timer {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  color: var(--teal);
+}
+
+.timer-num {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.timer-unit {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+
+.timer-track {
+  width: 100%;
+  height: 0.9rem;
+  border-radius: 999px;
+  background: rgba(11, 95, 99, 0.12);
+  overflow: hidden;
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--teal);
+  transition: width 0.1s linear;
+}
+
+.timer.is-hurry {
+  color: var(--coral-deep);
+}
+
+.timer.is-hurry .timer-bar {
+  background: var(--coral-deep);
+}
+
 .question {
   margin: 0;
   display: flex;
